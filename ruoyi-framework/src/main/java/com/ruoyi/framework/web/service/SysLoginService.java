@@ -1,6 +1,8 @@
 package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
+
+import com.ruoyi.common.utils.sign.RsaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -69,8 +71,12 @@ public class SysLoginService
         try
         {
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+//            authentication = authenticationManager
+//                    .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
+            // 关键代码 RsaUtils.decryptByPrivateKey(password)
             authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+                    .authenticate(new UsernamePasswordAuthenticationToken(username, RsaUtils.decryptByPrivateKey(password)));
         }
         catch (Exception e)
         {
